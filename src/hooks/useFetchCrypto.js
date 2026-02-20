@@ -2,30 +2,29 @@ import { useState, useEffect } from 'react';
 import { useCrypto } from '../context/CryptoContext';
 
 export const useFetchCrypto = () => {
-  const { setCoins } = useCrypto();
+  const { currency, setCoins } = useCrypto(); // Get currency here
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchMarket = async () => {
-try {
-  const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1');
-  
-  if (!res.ok) {
-    if (res.status === 429) throw new Error("Rate limit exceeded. Please wait a moment.");
-    throw new Error("The Market is closed (API Error)");
-  }
-  
-  const data = await res.json();
-  setCoins(data);
-} catch (err) {
-  setError(err.name === 'TypeError' ? "Network Blocked - Check your connection or Ad-blocker" : err.message);
-}finally {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=12&page=1`
+        );
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        setCoins(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
-    fetchMarket();
-  }, [setCoins]);
+
+    fetchData();
+  }, [currency]); 
 
   return { loading, error };
-};
+}
