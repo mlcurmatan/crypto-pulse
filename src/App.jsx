@@ -19,12 +19,11 @@ function App() {
     </div>
   </div>
 </nav>
-<BrowserRouter basename="/crypto-pulse">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/analysis" element={<Analysis />} />
         </Routes>
-</BrowserRouter>
+
       </Router>
     </CryptoProvider>
   );
