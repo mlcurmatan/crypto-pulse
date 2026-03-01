@@ -27,4 +27,4 @@ export const useFetchCrypto = () => {
   }, [currency]); 
 
   return { loading, error };
-}
+};
